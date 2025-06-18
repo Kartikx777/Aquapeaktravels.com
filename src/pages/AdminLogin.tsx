@@ -5,7 +5,7 @@ import { auth } from '../config/firebase';
 import { Lock, Mail, Mountain } from 'lucide-react';
 import toast from 'react-hot-toast';
 import GlassCard from '../components/GlassCard';
-import Image3 from '../assets/image 3.png'; 
+import Image3 from '../assets/image3.png'; 
 
 interface AdminLoginProps {
   onLogin: () => void;
