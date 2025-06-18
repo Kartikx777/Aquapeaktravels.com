@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/src/assets/Image 3.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <title>AquaPeak Travels | Discover Adventures, Book Memories</title>
+    
+    <!-- ✅ Basic SEO -->
+    <meta name="description" content="Discover breathtaking destinations with AquaPeak Travels. From Manali to Shimla, create lasting memories with our premium travel packages." />
+    <meta name="keywords" content="AquaPeak, Travel, Manali, Shimla, Adventure, Tours, Vacation, Kartik Sharma, Chandrakant Teotia" />
+    <meta name="author" content="Chandrakant Teotia" />
+    <meta name="owner" content="Kartik Sharma" />
+
+    <!-- ✅ Open Graph for Social Media -->
+    <meta property="og:title" content="AquaPeak Travels" />
+    <meta property="og:description" content="Plan your next adventure with AquaPeak Travels — where memories begin." />
+    <meta property="og:image" content="https://aquapeaktravels.com/" />
+    <meta property="og:url" content="https://aquapeaktravels.com" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="AquaPeak Travels" />
+
+    <!-- ✅ Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="AquaPeak Travels" />
+    <meta name="twitter:description" content="Discover breathtaking destinations and travel packages." />
+    <meta name="twitter:image" content="https://aquapeaktravels.com/og-image.jpg" />
+
+    <!-- ✅ Structured Data for Google -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "TravelAgency",
+      "name": "AquaPeak Travels",
+      "url": "https://aquapeaktravels.com",
+      "logo": "https://aquapeaktravels.com/og-image.jpg",
+      "description": "Discover breathtaking destinations with AquaPeak Travels.",
+      "founder": {
+        "@type": "Person",
+        "name": "Kartik Sharma"
+      },
+      "developer": {
+        "@type": "Person",
+        "name": "Chandrakant Teotia"
+      }
+    }
+    </script>
+
+    <!-- ✅ Your CSS -->
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background: #0a0a0a;
+        color: white;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+        overflow-x: hidden;
+      }
+
+      .bg-300 {
+        background-size: 300% 300%;
+      }
+
+      .glass {
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: linear-gradient(to bottom, #06b6d4, #3b82f6);
+        border-radius: 10px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(to bottom, #0891b2, #2563eb);
+      }
+
+      @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+      }
+
+      .animate-float {
+        animation: float 6s ease-in-out infinite;
+      }
+
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+
+      .animate-spin {
+        animation: spin 1s linear infinite;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
