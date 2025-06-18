@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import Image3 from '../assets/image3.png';
+import Image3 from '../assets/Image3.png';
 
 const Loader: React.FC = () => {
   return (
