@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Mountain, Menu, X } from 'lucide-react';
 import { useState } from 'react';
-import Image3 from '../assets/image3.png'; // Adjust the path as necessary
+import Image3 from '../assets/Image3.png'; // Adjust the path as necessary
 
 
 const Header: React.FC = () => {

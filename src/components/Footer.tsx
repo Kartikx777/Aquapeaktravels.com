@@ -4,7 +4,7 @@ import { Mountain, Mail, Phone, MapPin, Instagram, Facebook } from 'lucide-react
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { LegalPage } from '../types';
-import Image3 from '../assets/image3.png';
+import Image3 from '../assets/Image3.png';
 import { Link } from 'react-router-dom';
 
 const Footer: React.FC = () => {
