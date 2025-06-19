@@ -6,6 +6,7 @@ import { Trip } from '../types';
 import Loader from '../components/Loader';
 import Header from '../components/Header';
 import Hero from '../components/Hero';
+import CustomizeTrip from '../components/CustomizeTrip';
 import TripCard from '../components/TripCard';
 import WhyChooseUs from '../components/WhyChooseUs';
 import ContactForm from '../components/ContactForm';
@@ -16,9 +17,27 @@ const HomePage: React.FC = () => {
   const [trips, setTrips] = useState<Trip[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [maxPrice, setMaxPrice] = useState<number>(100000); // default high max
+  const [maxPrice, setMaxPrice] = useState<number>(100000);
+  const [isDark, setIsDark] = useState(true);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const storedTheme = localStorage.getItem('theme');
+    if (storedTheme) {
+      setIsDark(storedTheme === 'dark');
+    }
+  }, []);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (isDark) {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  }, [isDark]);
 
   useEffect(() => {
     const fetchTrips = async () => {
@@ -47,8 +66,9 @@ const HomePage: React.FC = () => {
   if (loading) return <Loader />;
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      <Header />
+    <div className={`min-h-screen transition-colors duration-300 ${isDark ? 'bg-black text-white' : 'bg-white text-black'}`}>
+      <Header isDark={isDark} setIsDark={setIsDark} />
+
       <Hero />
 
       <section id="trips" className="py-20 px-6">
@@ -59,23 +79,22 @@ const HomePage: React.FC = () => {
             transition={{ duration: 0.8 }}
             className="text-center mb-10"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            <h2 className={`text-4xl md:text-5xl font-bold mb-6 ${isDark ? 'text-white' : 'text-black'}`}>
               Discover Amazing
               <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent"> Destinations</span>
             </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+            <p className={`text-xl max-w-3xl mx-auto ${isDark ? 'text-gray-300' : 'text-black'}`}>
               From snow-capped mountains to serene valleys, explore handpicked destinations that will take your breath away.
             </p>
           </motion.div>
 
-          {/* 🔍 Filter Section */}
-          <div className="flex flex-col md:flex-row gap-4 justify-center items-center  p-6 rounded-xl shadow-inner mb-12">
+          <div className="flex flex-col md:flex-row gap-4 justify-center items-center p-6 rounded-xl shadow-inner mb-12 bg-gray-100 dark:bg-[#1a1a1a]">
             <input
               type="text"
               placeholder="Search by trip title..."
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="w-full md:w-1/3 px-4 py-2 rounded-lg bg-[#1a1a1a] text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+              className={`w-full md:w-1/3 px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-cyan-500 ${isDark ? 'bg-[#2a2a2a] text-white border-gray-600' : 'bg-white text-black border-gray-300'}`}
             />
             <input
               type="range"
@@ -86,7 +105,7 @@ const HomePage: React.FC = () => {
               onChange={e => setMaxPrice(Number(e.target.value))}
               className="w-full md:w-1/3"
             />
-            <p className="text-gray-400">Max Price: ₹{maxPrice.toLocaleString()}</p>
+            <p className={`${isDark ? 'text-gray-400' : 'text-black'}`}>Max Price: ₹{maxPrice.toLocaleString()}</p>
           </div>
 
           {filteredTrips.length === 0 ? (
@@ -95,8 +114,8 @@ const HomePage: React.FC = () => {
               animate={{ opacity: 1 }}
               className="text-center py-20"
             >
-              <p className="text-xl text-gray-400">No trips match your filters.</p>
-              <p className="text-gray-500 mt-2">Try adjusting search or price range.</p>
+              <p className={`text-xl ${isDark ? 'text-gray-300' : 'text-black'}`}>No trips match your filters.</p>
+              <p className={`mt-2 ${isDark ? 'text-gray-300' : 'text-black'}`}>Try adjusting search or price range.</p>
             </motion.div>
           ) : (
             <>
@@ -123,6 +142,7 @@ const HomePage: React.FC = () => {
 
       <WhyChooseUs />
       <ContactForm />
+      <CustomizeTrip />
       <Footer />
     </div>
   );

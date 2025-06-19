@@ -44,7 +44,7 @@ const features = [
 
 const WhyChooseUs: React.FC = () => {
   return (
-    <section id="about" className="py-20 px-6">
+    <section id="about" className="py-20 px-6 bg-white text-black dark:bg-black dark:text-white transition-colors duration-300">
       <div className="container mx-auto max-w-7xl">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
@@ -52,11 +52,11 @@ const WhyChooseUs: React.FC = () => {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6">
             Why Travel With
             <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent"> AquaPeak?</span>
           </h2>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
             We don't just plan trips, we create life-changing experiences that stay with you forever.
             Here's what makes us different from the rest.
           </p>
@@ -70,7 +70,7 @@ const WhyChooseUs: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
             >
-              <GlassCard className="h-full text-center group">
+              <GlassCard className="h-full text-center group border dark:border-none border-black">
                 <motion.div
                   whileHover={{ scale: 1.1, rotate: 5 }}
                   transition={{ duration: 0.3 }}
@@ -78,12 +78,12 @@ const WhyChooseUs: React.FC = () => {
                 >
                   <feature.icon className="text-white" size={32} />
                 </motion.div>
-                
-                <h3 className="text-xl font-bold text-white mb-4 group-hover:text-cyan-400 transition-colors">
+
+                <h3 className="text-xl font-bold mb-4 group-hover:text-cyan-400 transition-colors dark:text-white text-black">
                   {feature.title}
                 </h3>
-                
-                <p className="text-gray-300 leading-relaxed">
+
+                <p className="leading-relaxed text-gray-700 dark:text-gray-300">
                   {feature.description}
                 </p>
               </GlassCard>
@@ -97,7 +97,7 @@ const WhyChooseUs: React.FC = () => {
           transition={{ duration: 0.8, delay: 0.5 }}
           className="mt-16 text-center"
         >
-          <GlassCard className="max-w-4xl mx-auto">
+          <GlassCard className="max-w-4xl mx-auto border dark:border-none border-black">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               <div>
                 <motion.div
@@ -107,7 +107,7 @@ const WhyChooseUs: React.FC = () => {
                 >
                   500+
                 </motion.div>
-                <p className="text-gray-300">Happy Travelers</p>
+                <p className="text-gray-700 dark:text-gray-300">Happy Travelers</p>
               </div>
               <div>
                 <motion.div
@@ -117,7 +117,7 @@ const WhyChooseUs: React.FC = () => {
                 >
                   50+
                 </motion.div>
-                <p className="text-gray-300">Destinations</p>
+                <p className="text-gray-700 dark:text-gray-300">Destinations</p>
               </div>
               <div>
                 <motion.div
@@ -127,7 +127,7 @@ const WhyChooseUs: React.FC = () => {
                 >
                   5+
                 </motion.div>
-                <p className="text-gray-300">Years Experience</p>
+                <p className="text-gray-700 dark:text-gray-300">Years Experience</p>
               </div>
               <div>
                 <motion.div
@@ -137,7 +137,7 @@ const WhyChooseUs: React.FC = () => {
                 >
                   4.9★
                 </motion.div>
-                <p className="text-gray-300">Average Rating</p>
+                <p className="text-gray-700 dark:text-gray-300">Average Rating</p>
               </div>
             </div>
           </GlassCard>

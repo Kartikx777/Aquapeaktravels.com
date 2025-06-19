@@ -24,8 +24,9 @@ export interface ContactSubmission {
   id: string;
   name: string;
   email: string;
+  number?: string; // ✅ Add this line
   message: string;
-  submittedAt: Date;
+  submittedAt: any;
   read: boolean;
 }
 

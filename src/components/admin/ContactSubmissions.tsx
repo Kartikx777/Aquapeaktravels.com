@@ -1,24 +1,58 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Eye, Mail, Calendar, User, MessageCircle, Trash2 } from 'lucide-react';
-import { updateDoc, doc, deleteDoc } from 'firebase/firestore';
+import {
+  Eye,
+  Mail,
+  Calendar,
+  User,
+  MessageCircle,
+  Trash2,
+  Phone,
+} from 'lucide-react';
+import {
+  updateDoc,
+  doc,
+  deleteDoc,
+  collection,
+  onSnapshot,
+  query,
+  orderBy,
+} from 'firebase/firestore';
 import { db } from '../../config/firebase';
-import { ContactSubmission } from '../../types';
 import toast from 'react-hot-toast';
 import GlassCard from '../GlassCard';
 
-interface ContactSubmissionsProps {
-  submissions: ContactSubmission[];
-  onRefresh: () => void;
+interface ContactSubmission {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  message: string;
+  submittedAt: any;
+  read: boolean;
 }
 
-const ContactSubmissions: React.FC<ContactSubmissionsProps> = ({ submissions, onRefresh }) => {
+const ContactSubmissions: React.FC = () => {
+  const [submissions, setSubmissions] = useState<ContactSubmission[]>([]);
   const [selectedSubmission, setSelectedSubmission] = useState<ContactSubmission | null>(null);
+
+  useEffect(() => {
+    const q = query(collection(db, 'contactSubmissions'), orderBy('submittedAt', 'desc'));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const data = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as ContactSubmission[];
+      console.log("Fetched Submissions:", data);
+
+      setSubmissions(data);
+    });
+    return () => unsubscribe();
+  }, []);
 
   const markAsRead = async (id: string) => {
     try {
       await updateDoc(doc(db, 'contactSubmissions', id), { read: true });
-      onRefresh();
       toast.success('Marked as read');
     } catch (error) {
       toast.error('Failed to update submission');
@@ -29,7 +63,6 @@ const ContactSubmissions: React.FC<ContactSubmissionsProps> = ({ submissions, on
     if (window.confirm('Are you sure you want to delete this submission?')) {
       try {
         await deleteDoc(doc(db, 'contactSubmissions', id));
-        onRefresh();
         setSelectedSubmission(null);
         toast.success('Submission deleted');
       } catch (error) {
@@ -49,7 +82,7 @@ const ContactSubmissions: React.FC<ContactSubmissionsProps> = ({ submissions, on
       <div className="flex justify-between items-center mb-8">
         <h2 className="text-3xl font-bold text-white">Contact Submissions</h2>
         <div className="text-sm text-gray-400">
-          {submissions.filter(s => !s.read).length} unread messages
+          {submissions.filter((s) => !s.read).length} unread messages
         </div>
       </div>
 
@@ -69,14 +102,12 @@ const ContactSubmissions: React.FC<ContactSubmissionsProps> = ({ submissions, on
                 key={submission.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className={`cursor-pointer ${
-                  selectedSubmission?.id === submission.id ? 'ring-2 ring-cyan-400' : ''
-                }`}
+                className={`cursor-pointer ${selectedSubmission?.id === submission.id ? 'ring-2 ring-cyan-400' : ''}`}
                 onClick={() => setSelectedSubmission(submission)}
               >
-                <GlassCard className={`transition-all ${
-                  !submission.read ? 'border-cyan-400/50 bg-cyan-500/5' : ''
-                }`}>
+                <GlassCard
+                  className={`transition-all ${!submission.read ? 'border-cyan-400/50 bg-cyan-500/5' : ''}`}
+                >
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center gap-2">
                       <User className="text-cyan-400" size={16} />
@@ -90,22 +121,27 @@ const ContactSubmissions: React.FC<ContactSubmissionsProps> = ({ submissions, on
                       {formatDate(submission.submittedAt)}
                     </div>
                   </div>
-                  
-                  <div className="flex items-center gap-2 mb-3 text-gray-300 text-sm">
+
+                  <div className="flex items-center gap-2 mb-2 text-gray-300 text-sm">
                     <Mail size={14} />
                     {submission.email}
                   </div>
-                  
-                  <p className="text-gray-300 text-sm line-clamp-2">
-                    {submission.message}
-                  </p>
-                  
+
+                  <div className="flex items-center gap-2 mb-2 text-gray-300 text-sm">
+                    <Phone size={14} />
+                    {submission.number || <span className="text-red-400 italic">No number found</span>}
+                  </div>
+
+
+                  <p className="text-gray-300 text-sm line-clamp-2">{submission.message}</p>
+
                   <div className="flex justify-between items-center mt-4">
-                    <span className={`text-xs px-2 py-1 rounded-full ${
-                      submission.read 
-                        ? 'bg-gray-600/20 text-gray-400' 
-                        : 'bg-cyan-500/20 text-cyan-400'
-                    }`}>
+                    <span
+                      className={`text-xs px-2 py-1 rounded-full ${submission.read
+                          ? 'bg-gray-600/20 text-gray-400'
+                          : 'bg-cyan-500/20 text-cyan-400'
+                        }`}
+                    >
                       {submission.read ? 'Read' : 'Unread'}
                     </span>
                     <Eye className="text-gray-400" size={16} />
@@ -119,10 +155,7 @@ const ContactSubmissions: React.FC<ContactSubmissionsProps> = ({ submissions, on
         {/* Submission Detail */}
         <div className="sticky top-8">
           {selectedSubmission ? (
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-            >
+            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
               <GlassCard>
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="text-xl font-bold text-white">Message Details</h3>
@@ -151,17 +184,28 @@ const ContactSubmissions: React.FC<ContactSubmissionsProps> = ({ submissions, on
                     <label className="block text-sm font-medium text-gray-400 mb-1">Name</label>
                     <p className="text-white">{selectedSubmission.name}</p>
                   </div>
-                  
+
                   <div>
                     <label className="block text-sm font-medium text-gray-400 mb-1">Email</label>
                     <p className="text-white">{selectedSubmission.email}</p>
                   </div>
-                  
+
+                  {selectedSubmission.number && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-400 mb-1">
+                        Phone Number
+                      </label>
+                      <p className="text-white">{selectedSubmission.number}</p>
+                    </div>
+                  )}
+
                   <div>
-                    <label className="block text-sm font-medium text-gray-400 mb-1">Submitted</label>
+                    <label className="block text-sm font-medium text-gray-400 mb-1">
+                      Submitted
+                    </label>
                     <p className="text-white">{formatDate(selectedSubmission.submittedAt)}</p>
                   </div>
-                  
+
                   <div>
                     <label className="block text-sm font-medium text-gray-400 mb-1">Message</label>
                     <div className="bg-white/5 border border-white/10 rounded-xl p-4">
@@ -179,6 +223,15 @@ const ContactSubmissions: React.FC<ContactSubmissionsProps> = ({ submissions, on
                     <Mail size={18} />
                     Reply via Email
                   </motion.a>
+                  <motion.a
+                    whileHover={{ scale: 1.02 }}
+                    href={`tel:${selectedSubmission.number || selectedSubmission.phone || ''}`}
+                    className="w-full mt-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-medium py-3 px-6 rounded-xl transition-all duration-300 shadow-lg hover:shadow-green-500/30 flex items-center justify-center gap-2"
+                  >
+                    <Phone size={18} />
+                    Contact Now
+                  </motion.a>
+
                 </div>
               </GlassCard>
             </motion.div>

@@ -1,12 +1,15 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { Mountain, Menu, X } from 'lucide-react';
-import { useState } from 'react';
-import Image3 from '../assets/Image3.png'; // Adjust the path as necessary
+import { motion, AnimatePresence } from 'framer-motion';
+import { Menu, X, Sun, Moon } from 'lucide-react';
+import Image3 from '../assets/Image3.png';
 
+interface HeaderProps {
+  isDark: boolean;
+  setIsDark: (value: boolean) => void;
+}
 
-const Header: React.FC = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+const Header: React.FC<HeaderProps> = ({ isDark, setIsDark }) => {
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -14,59 +17,51 @@ const Header: React.FC = () => {
     setIsMenuOpen(false);
   };
 
+  const textColor = isDark ? 'text-white' : 'text-black';
+  const hoverColor = isDark ? 'hover:text-cyan-400' : 'hover:text-cyan-600';
+
   return (
     <motion.header
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.8 }}
-      className="fixed top-0 left-0 right-0 z-40 backdrop-blur-xl bg-black/20 border-b border-white/10"
+      className={`fixed top-0 left-0 right-0 z-40 backdrop-blur-xl ${
+        isDark ? 'bg-black/20 border-white/10' : 'bg-white/30 border-black/10'
+      } border-b transition-colors duration-300`}
     >
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
+          {/* Logo */}
           <motion.div
             whileHover={{ scale: 1.05 }}
-            className="flex items-center gap-3"
+            className="flex items-center gap-3 cursor-pointer"
+            onClick={() => scrollToSection('home')}
           >
-            <div className="w-10 h-10  from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center">
-              {/* <Mountain size={24} className="text-white" />  */}
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center">
               <img
-    src={Image3}
-    alt="Logo"
-    className="w-full h-full object-cover"
-  />
+                src={Image3}
+                alt="Logo"
+                className="w-full h-full object-cover rounded-md"
+              />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-white">AquaPeak</h1>
+              <h1 className={`text-xl font-bold ${textColor}`}>AquaPeak</h1>
               <p className="text-xs text-cyan-400">Travels</p>
             </div>
           </motion.div>
 
           {/* Desktop Menu */}
-          <nav className="hidden md:flex items-center gap-8">
-            <button
-              onClick={() => scrollToSection('home')}
-              className="text-white hover:text-cyan-400 transition-colors"
-            >
-              Home
-            </button>
-            <button
-              onClick={() => scrollToSection('trips')}
-              className="text-white hover:text-cyan-400 transition-colors"
-            >
-              Trips
-            </button>
-            <button
-              onClick={() => scrollToSection('about')}
-              className="text-white hover:text-cyan-400 transition-colors"
-            >
-              About
-            </button>
-            <button
-              onClick={() => scrollToSection('contact')}
-              className="text-white hover:text-cyan-400 transition-colors"
-            >
-              Contact
-            </button>
+          <nav className="hidden md:flex items-center gap-4">
+            {['home', 'trips', 'about', 'contact'].map((section) => (
+              <button
+                key={section}
+                onClick={() => scrollToSection(section)}
+                className={`${textColor} ${hoverColor} transition-colors`}
+              >
+                {section.charAt(0).toUpperCase() + section.slice(1)}
+              </button>
+            ))}
+
             <motion.a
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -75,12 +70,46 @@ const Header: React.FC = () => {
             >
               Admin
             </motion.a>
+
+            {/* Toggle Theme Button */}
+            <motion.button
+              whileHover={{ scale: 1.15, rotate: 10 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setIsDark(!isDark)}
+              className={`ml-2 p-2 transition-all duration-300 rounded-full shadow ${
+                isDark ? 'bg-white/10 text-white' : 'bg-black/10 text-black'
+              }`}
+            >
+              <AnimatePresence mode="wait" initial={false}>
+                {isDark ? (
+                  <motion.div
+                    key="sun"
+                    initial={{ rotate: -90, opacity: 0 }}
+                    animate={{ rotate: 0, opacity: 1 }}
+                    exit={{ rotate: 90, opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <Sun size={20} />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="moon"
+                    initial={{ rotate: 90, opacity: 0 }}
+                    animate={{ rotate: 0, opacity: 1 }}
+                    exit={{ rotate: -90, opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <Moon size={20} />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.button>
           </nav>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Menu Toggle */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden text-white p-2"
+            className={`md:hidden p-2 ${textColor}`}
           >
             {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -93,36 +122,60 @@ const Header: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             className="md:hidden mt-4 space-y-4 pb-4"
           >
-            <button
-              onClick={() => scrollToSection('home')}
-              className="block w-full text-left text-white hover:text-cyan-400 transition-colors py-2"
-            >
-              Home
-            </button>
-            <button
-              onClick={() => scrollToSection('trips')}
-              className="block w-full text-left text-white hover:text-cyan-400 transition-colors py-2"
-            >
-              Trips
-            </button>
-            <button
-              onClick={() => scrollToSection('about')}
-              className="block w-full text-left text-white hover:text-cyan-400 transition-colors py-2"
-            >
-              About
-            </button>
-            <button
-              onClick={() => scrollToSection('contact')}
-              className="block w-full text-left text-white hover:text-cyan-400 transition-colors py-2"
-            >
-              Contact
-            </button>
+            {['home', 'trips', 'about', 'contact'].map((section) => (
+              <button
+                key={section}
+                onClick={() => scrollToSection(section)}
+                className={`block w-full text-left ${textColor} ${hoverColor} transition-colors py-2`}
+              >
+                {section.charAt(0).toUpperCase() + section.slice(1)}
+              </button>
+            ))}
+
             <a
               href="/admin"
               className="block w-full text-center bg-gradient-to-r from-cyan-500 to-blue-500 text-white px-6 py-2 rounded-full font-medium"
             >
               Admin
             </a>
+
+            <motion.button
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setIsDark(!isDark)}
+              className={`block w-full text-center mt-2 py-2 rounded-full transition-all ${
+                isDark
+                  ? 'bg-white/10 text-white hover:bg-white/20'
+                  : 'bg-black/10 text-black hover:bg-black/20'
+              }`}
+            >
+              <AnimatePresence mode="wait" initial={false}>
+                {isDark ? (
+                  <motion.div
+                    key="sun-mobile"
+                    initial={{ rotate: -90, opacity: 0 }}
+                    animate={{ rotate: 0, opacity: 1 }}
+                    exit={{ rotate: 90, opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="flex items-center justify-center gap-2"
+                  >
+                    <Sun size={18} />
+                    Switch to Light Mode
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="moon-mobile"
+                    initial={{ rotate: 90, opacity: 0 }}
+                    animate={{ rotate: 0, opacity: 1 }}
+                    exit={{ rotate: -90, opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="flex items-center justify-center gap-2"
+                  >
+                    <Moon size={18} />
+                    Switch to Dark Mode
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.button>
           </motion.nav>
         )}
       </div>

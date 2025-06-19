@@ -14,7 +14,7 @@ interface TripCardProps {
 const TripCard: React.FC<TripCardProps> = ({ trip, index }) => {
   const [showAllItinerary, setShowAllItinerary] = useState(false);
   const [roomType, setRoomType] = useState<'Quad' | 'Triple' | 'Twin'>('Quad');
-  const navigate = useNavigate(); // ✅ for same-tab navigation
+  const navigate = useNavigate();
 
   const basePrice = Number(trip.price);
   const triplePrice = trip.triplePrice ? Number(trip.triplePrice) : basePrice + 500;
@@ -35,8 +35,7 @@ Trip Details:
 - Price: ₹${roomPrices[roomType].toLocaleString()} per person (${roomType})
 - Itinerary: ${trip.itinerary.slice(0, 3).join(', ')}${trip.itinerary.length > 3
         ? ` and ${trip.itinerary.length - 3} more places`
-        : ''
-      }
+        : ''}
 
 Please send me more details about:
 - Available dates
@@ -55,7 +54,7 @@ Thanks! Looking forward to it.`;
   };
 
   const handleMoreInfo = () => {
-    navigate(`/trip/${trip.id}`); // ✅ Opens in the same tab
+    navigate(`/trip/${trip.id}`);
   };
 
   const sliderSettings = {
@@ -69,9 +68,7 @@ Thanks! Looking forward to it.`;
     autoplaySpeed: 3000,
   };
 
-  const visibleItinerary = showAllItinerary
-    ? trip.itinerary
-    : trip.itinerary.slice(0, 2);
+  const visibleItinerary = showAllItinerary ? trip.itinerary : trip.itinerary.slice(0, 2);
   const remainingCount = trip.itinerary.length - 2;
 
   return (
@@ -81,7 +78,7 @@ Thanks! Looking forward to it.`;
       transition={{ duration: 0.6, delay: index * 0.1 }}
       className="relative group"
     >
-      <GlassCard className="overflow-hidden">
+      <GlassCard className="overflow-hidden border border-black dark:border-white bg-white dark:bg-black">
         {trip.featured && (
           <div className="absolute top-4 right-4 z-10">
             <motion.div
@@ -125,25 +122,23 @@ Thanks! Looking forward to it.`;
         <div className="space-y-4">
           <div className="flex justify-between items-start">
             <div>
-              <h3 className="text-xl font-bold text-white group-hover:text-cyan-400 transition-colors">
+              <h3 className="text-xl font-bold text-black dark:text-white group-hover:text-cyan-400 transition-colors">
                 {trip.title}
               </h3>
-              <div className="mt-1 text-sm text-gray-400 flex items-center gap-2">
+              <div className="mt-1 text-sm text-gray-700 dark:text-gray-400 flex items-center gap-2">
                 <Calendar size={16} />
                 <span>{trip.duration}</span>
               </div>
             </div>
 
             <div className="text-right">
-              <div className="text-2xl font-bold text-cyan-400">
+              <div className="text-2xl font-bold text-cyan-500">
                 ₹{roomPrices[roomType].toLocaleString()}
               </div>
               <select
                 value={roomType}
-                onChange={(e) =>
-                  setRoomType(e.target.value as 'Quad' | 'Triple' | 'Twin')
-                }
-                className="mt-2 w-full bg-cyan-950/30 text-sm text-cyan-300 border border-cyan-400 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all"
+                onChange={(e) => setRoomType(e.target.value as 'Quad' | 'Triple' | 'Twin')}
+                className="mt-2 w-full bg-cyan-100 dark:bg-cyan-950/30 text-sm text-cyan-700 dark:text-cyan-300 border border-cyan-400 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all"
               >
                 <option value="Quad">Quad Sharing</option>
                 <option value="Triple">Triple Sharing</option>
@@ -153,7 +148,7 @@ Thanks! Looking forward to it.`;
           </div>
 
           <div className="space-y-2">
-            <div className="flex items-center gap-2 text-gray-300 mb-2">
+            <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300 mb-2">
               <MapPin size={16} />
               <span className="font-medium">Itinerary</span>
             </div>
@@ -165,7 +160,7 @@ Thanks! Looking forward to it.`;
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.1 * idx }}
-                  className="text-sm text-gray-400 flex items-center gap-2"
+                  className="text-sm text-gray-700 dark:text-gray-400 flex items-center gap-2"
                 >
                   <div className="w-1 h-1 bg-cyan-400 rounded-full" />
                   {item}
@@ -177,13 +172,13 @@ Thanks! Looking forward to it.`;
               <div className="flex justify-between mt-2">
                 <button
                   onClick={() => setShowAllItinerary(!showAllItinerary)}
-                  className="text-cyan-400 text-sm hover:underline"
+                  className="text-cyan-600 dark:text-cyan-400 text-sm hover:underline"
                 >
                   {showAllItinerary ? 'Show less' : `+${remainingCount} more places`}
                 </button>
                 <button
                   onClick={handleMoreInfo}
-                  className="text-blue-400 text-sm hover:underline"
+                  className="text-blue-600 dark:text-blue-400 text-sm hover:underline"
                 >
                   More Information →
                 </button>
@@ -207,7 +202,7 @@ Thanks! Looking forward to it.`;
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={handleContactUs}
-                className="w-full bg-gradient-to-r from-cyan-500/20 to-blue-500/20 hover:from-cyan-500/30 hover:to-blue-500/30 border border-cyan-500/30 hover:border-cyan-400/50 text-cyan-400 font-medium py-3 px-6 rounded-2xl transition-all duration-300 flex items-center justify-center gap-2"
+                className="w-full bg-gradient-to-r from-cyan-100/60 to-blue-100/60 dark:from-cyan-500/20 dark:to-blue-500/20 hover:from-cyan-200 hover:to-blue-200 dark:hover:from-cyan-500/30 dark:hover:to-blue-500/30 border border-cyan-400 dark:border-cyan-500/30 hover:border-cyan-500 dark:hover:border-cyan-400/50 text-cyan-700 dark:text-cyan-400 font-medium py-3 px-6 rounded-2xl transition-all duration-300 flex items-center justify-center gap-2"
               >
                 <Phone size={18} />
                 Contact Us
