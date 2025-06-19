@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './config/firebase';
 import { Toaster } from 'react-hot-toast';
+import ScrollToHashElement from './pages/ScrollToHashElement';
 
 import HomePage from './pages/HomePage';
 import AdminLogin from './pages/AdminLogin';
@@ -36,6 +37,7 @@ function App() {
 
   return (
     <Router>
+      <ScrollToHashElement />
       <div className="App">
         <Toaster
           position="top-right"

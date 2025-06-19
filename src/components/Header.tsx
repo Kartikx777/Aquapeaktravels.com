@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Sun, Moon } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Image3 from '../assets/Image3.png';
 
 interface HeaderProps {
@@ -10,11 +11,19 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ isDark, setIsDark }) => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    element?.scrollIntoView({ behavior: 'smooth' });
+  const scrollOrNavigate = (id: string) => {
     setIsMenuOpen(false);
+    if (location.pathname === '/') {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      navigate(`/#${id}`);
+    }
   };
 
   const textColor = isDark ? 'text-white' : 'text-black';
@@ -35,7 +44,7 @@ const Header: React.FC<HeaderProps> = ({ isDark, setIsDark }) => {
           <motion.div
             whileHover={{ scale: 1.05 }}
             className="flex items-center gap-3 cursor-pointer"
-            onClick={() => scrollToSection('home')}
+            onClick={() => scrollOrNavigate('home')}
           >
             <div className="w-10 h-10 rounded-xl flex items-center justify-center">
               <img
@@ -55,7 +64,7 @@ const Header: React.FC<HeaderProps> = ({ isDark, setIsDark }) => {
             {['home', 'trips', 'about', 'contact'].map((section) => (
               <button
                 key={section}
-                onClick={() => scrollToSection(section)}
+                onClick={() => scrollOrNavigate(section)}
                 className={`${textColor} ${hoverColor} transition-colors`}
               >
                 {section.charAt(0).toUpperCase() + section.slice(1)}
@@ -125,7 +134,7 @@ const Header: React.FC<HeaderProps> = ({ isDark, setIsDark }) => {
             {['home', 'trips', 'about', 'contact'].map((section) => (
               <button
                 key={section}
-                onClick={() => scrollToSection(section)}
+                onClick={() => scrollOrNavigate(section)}
                 className={`block w-full text-left ${textColor} ${hoverColor} transition-colors py-2`}
               >
                 {section.charAt(0).toUpperCase() + section.slice(1)}
